@@ -1,28 +1,43 @@
 from __future__ import division, print_function
 
-from flask import request, url_for
-from flask.ext.api import FlaskAPI, status, exceptions
+from flask import Flask, render_template, request, \
+                    flash, redirect, url_for
 
 import us
 
-app = FlaskAPI(__name__)
+class Config(object):
+	CSRF_ENABLED = False
+    DEBUG = True
 
-app.config['DEFAULT_RENDERERS'] = [
-    'flask.ext.api.renderers.JSONRenderer',
-    'flask.ext.api.renderers.BrowsableAPIRenderer',
-]
+def create_app():
+    app = Flask(__name__)
+    # default config
+    app.config.from_object(__name__ + '.ConfigClass')
+    # attempt to import settings from settings file
+    try:
+        app.config.from_object('local_settings')
+    except:
+        pass
 
-@app.route("/")
-def state_list():
-	return [str(state) for state in us.states.STATES]
+    @app.route("/")
+    def index():
+        return render_template("index.html")
 
-@app.route("/abbr")
-def state_list_abbreviation():
-	return [str(state.abbr) for state in us.states.STATES]
+	@app.route("/state/")
+	def state_list():
+        states = [str(state) for state in us.states.STATES]
+		return render_template("api.html")
 
-@app.route("/state/<path:state>")
-def find_state(state):
-	return us.states.lookup(state).__dict__
+	@app.route("/abbr/")
+	def state_list_abbreviation():
+        states = [str(state.abbr) for state in us.states.STATES]
+		return render_template("api.html")
+
+	@app.route("/state/<path:state>/")
+	def find_state(state):
+        state = us.states.lookup(state).__dict__
+		return render_template("api.html")
 
 if __name__ == '__main__':
-	app.run(debug=True)
+    app = create_app()
+    app.run()
