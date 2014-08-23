@@ -6,7 +6,7 @@ from flask import Flask, render_template, request, \
 import us
 
 class Config(object):
-	CSRF_ENABLED = False
+    CSRF_ENABLED = False
     DEBUG = True
 
 def create_app():
@@ -23,20 +23,20 @@ def create_app():
     def index():
         return render_template("index.html")
 
-	@app.route("/state/")
-	def state_list():
+    @app.route("/state/")
+    def state_list():
         states = [str(state) for state in us.states.STATES]
-		return render_template("api.html")
+        return render_template("api.html")
 
-	@app.route("/abbr/")
-	def state_list_abbreviation():
+    @app.route("/abbr/")
+    def state_list_abbreviation():
         states = [str(state.abbr) for state in us.states.STATES]
-		return render_template("api.html")
+        return render_template("api.html")
 
-	@app.route("/state/<path:state>/")
-	def find_state(state):
+    @app.route("/state/<path:state>/")
+    def find_state(state):
         state = us.states.lookup(state).__dict__
-		return render_template("api.html")
+        return render_template("api.html")
 
 if __name__ == '__main__':
     app = create_app()
