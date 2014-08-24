@@ -7,7 +7,7 @@ USER=ubuntu
 GROUP=ubuntu
 NUM_WORKERS=3
 WSGI_MODULE=uss
-VIRTENV=/home/ubuntu/.virtualenvs/uss
+VIRTENV=/home/ubuntu/virtualenvs/uss
 
 echo "Starting $NAME"
 
