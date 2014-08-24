@@ -23,23 +23,25 @@ def create_app():
     except:
         pass
 
-    def flask_api(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            format_as = request.args.get("format")
+    def flask_api(title="Some Title"):
+        def decorator(func):
+            @wraps(func)
+            def wrapper(*args, **kwargs):
+                format_as = request.args.get("format")
 
-            func_val = func(*args, **kwargs)
-            data = json.dumps(func_val, sort_keys=True, indent=2, separators=(',', ': '))
-            response = "%s %s" % (request.method, request.path.replace(" ", "%20"))
+                func_val = func(*args, **kwargs)
+                data = json.dumps(func_val, sort_keys=True, indent=2, separators=(',', ': '))
+                response = "%s %s" % (request.method, request.path.replace(" ", "%20"))
 
-            ua = user_agent_parser.Parse(request.headers.get("User-Agent"))
-            if (format_as == "json"
-                or ua['os']['family'] == "Other"
-                or ua['user_agent']['family'] == "Other"):
-                    return jsonify(**func_val)
-            else:
-                return render_template("api.html", response=response, request=data, title="States List")
-        return wrapper
+                ua = user_agent_parser.Parse(request.headers.get("User-Agent"))
+                if (format_as == "json"
+                    or ua['os']['family'] == "Other"
+                    or ua['user_agent']['family'] == "Other"):
+                        return jsonify(**func_val)
+                else:
+                    return render_template("api.html", response=response, request=data, title=title)
+            return wrapper
+        return decorator
 
     @app.route("/")
     def index():
@@ -50,12 +52,12 @@ def create_app():
         return render_template("about.html")
 
     @app.route("/states/")
-    @flask_api
+    @flask_api("State List")
     def states():
         return { "states": [str(state) for state in us.states.STATES] }
 
     @app.route("/states/abbr/")
-    @flask_api
+    @flask_api("State Abbreviations List")
     def states_abbreviation():
         return { "states": [str(state.abbr) for state in us.states.STATES] }
 
@@ -65,7 +67,7 @@ def create_app():
         return render_template("state_list.html", state_list=state_list)
 
     @app.route("/state/<path:state>/")
-    @flask_api
+    @flask_api("State Information")
     def state(state):
         format_as = request.args.get("format")
 
