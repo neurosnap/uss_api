@@ -1,9 +1,15 @@
-{% extend "base.html" %}
+{% extends "base.html" %}
 
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        USA States API
+        <div class="jumbotron">
+            <h1>USA States API</h1>
+            <p>
+                This service is a simple API that allows for quick access to basic US State information.
+            </p>
+            <p><a class="btn btn-primary btn-lg" role="button" href="/state/">State Information List</a></p>
+        </div>
     </div>
 </div>
 {% endblock %}

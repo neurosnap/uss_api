@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header">
+    <h3>State Information</h3>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        {% for state in state_list %}
+            <a href="/state/{{ state }}">{{ state }}</a> <br />
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

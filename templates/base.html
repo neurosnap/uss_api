@@ -6,28 +6,39 @@
         <meta name=”description” content=”United States of America States Information API”>
 
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-        <link href="{{ url_for('static', filename='css/core.css') }}" rel="stylesheet">
+        <!-- <link href="{{ url_for('static', filename='core.css') }}" rel="stylesheet"> -->
         {% block css %}{% endblock %}
 
         <title>USA States API</title>
     </head>
     <body>
         <nav class="navbar navbar-default" role="navigation">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/">USS API</a>
-            </div>
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav dcm_nav">
-                    <li><a href="/explore"><span class="glyphicon glyphicon-th-large"></span> Explore</a></li>
-                    <li><a href="/state/">States</a></li>
-                </ul>
-
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/">USS API</a>
+                </div>
+                <div class="collapse navbar-collapse navbar-ex1-collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <span class="glyphicon glyphicon-th-large"></span> States
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="/states/">States List</a></li>
+                                <li><a href="/states/abbr/">States List Abbreviations</a></li>
+                                <li><a href="/state/">State Information</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="/about/"><span class="glyphicon glyphicon-question-sign"></span> About</a></li>
+                    </ul>
+                </div>
             </div>
         </nav>
         <div id="content" class="container">
@@ -45,10 +56,13 @@
             {% endwith %}
 
             {% block content %}{% endblock %}
+            <hr />
+            Written by <a href="http://neurosnap.net">Eric Bower</a>
+            <br /><br />
         </div>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-        <script src="{{ url_for('static', filename='js/core.js')  }}"></script>
+        <script src="{{ url_for('static', filename='core.js')  }}"></script>
         {% block js %}{% endblock %}
     </body>
 </html>
