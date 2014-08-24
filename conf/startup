@@ -1,0 +1,31 @@
+#!/bin/bash
+
+NAME="uss"
+FLASKDIR=/srv/www/uss
+SOCKFILE=/srv/www/uss/run/gunicorn.sock
+USER=ubuntu
+GROUP=ubuntu
+NUM_WORKERS=3
+WSGI_MODULE=uss
+VIRTENV=/home/ubuntu/.virtualenvs/uss
+
+echo "Starting $NAME"
+
+# Activate the virtual environment
+cd $VIRTENV
+source ./bin/activate
+
+# Create the run directory if it doesn't exist
+RUNDIR=$(dirname $SOCKFILE)
+test -d $RUNDIR || mkdir -p $RUNDIR
+
+# Start your Flask Unicorn
+# Programs meant to be run under supervisor
+#  should not daemonize themselves (do not use --daemon)
+cd $FLASKDIR
+exec gunicorn ${WSGI_MODULE}:app \
+  --name $NAME \
+  --user=$USER --group=$GROUP \
+  --workers $NUM_WORKERS \
+  --log-level=debug \
+  --bind=unix:$SOCKFILE
