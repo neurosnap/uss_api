@@ -69,14 +69,11 @@ def create_app():
     @app.route("/state/<path:state>/")
     @flask_api("State Information")
     def state(state):
-        format_as = request.args.get("format")
-
-        st = us.states.lookup(state)
-        if st:
-            st = st.__dict__
+        state_info = us.states.lookup(state)
+        if state_infp:
+            return state_info.__dict__
         else:
-            st = { "name": "Not found", "error": "No state information found" }
-        return st
+            return { "name": "Not found", "error": "No state information found" }
 
     return app
 
