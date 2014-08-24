@@ -5,9 +5,19 @@
     <h3>State Information</h3>
 </div>
 
+<ol class="breadcrumb">
+    <li class="active">States</li>
+</ol>
+
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-3">
         {% for state in state_list %}
+            <a href="/state/{{ state }}">{{ state }}</a> <br />
+        {% endfor %}
+    </div>
+
+    <div class="col-md-9">
+        {% for state in abbr_list %}
             <a href="/state/{{ state }}">{{ state }}</a> <br />
         {% endfor %}
     </div>

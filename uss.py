@@ -23,23 +23,23 @@ def create_app():
     except:
         pass
 
-    def flask_api(title="Some Title"):
+    def flask_api(title="Some API Title", template="api.html"):
         def decorator(func):
             @wraps(func)
             def wrapper(*args, **kwargs):
                 format_as = request.args.get("format")
 
                 func_val = func(*args, **kwargs)
-                data = json.dumps(func_val, sort_keys=True, indent=2, separators=(',', ': '))
-                response = "%s %s" % (request.method, request.path.replace(" ", "%20"))
+                response = json.dumps(func_val, sort_keys=True, indent=2, separators=(',', ': '))
+                req = "%s %s" % (request.method, request.path.replace(" ", "%20"))
+                user_agent = user_agent_parser.Parse(request.headers.get("User-Agent"))
 
-                ua = user_agent_parser.Parse(request.headers.get("User-Agent"))
                 if (format_as == "json"
-                    or ua['os']['family'] == "Other"
-                    or ua['user_agent']['family'] == "Other"):
+                    or user_agent['os']['family'] == "Other"
+                    or user_agent['user_agent']['family'] == "Other"):
                         return jsonify(**func_val)
                 else:
-                    return render_template("api.html", response=response, request=data, title=title)
+                    return render_template(template, request=req, response=response, title=title)
             return wrapper
         return decorator
 
@@ -64,10 +64,11 @@ def create_app():
     @app.route("/state/")
     def state_list():
         state_list = [str(state) for state in us.states.STATES]
-        return render_template("state_list.html", state_list=state_list)
+        abbr_list = [str(state.abbr) for state in us.states.STATES]
+        return render_template("state_list.html", state_list=state_list, abbr_list=abbr_list)
 
     @app.route("/state/<path:state>/")
-    @flask_api("State Information")
+    @flask_api("State Information", "state.html")
     def state(state):
         state_info = us.states.lookup(state)
         if state_info:

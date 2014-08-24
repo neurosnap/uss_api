@@ -2,11 +2,14 @@
 
 {% block content %}
 
-{% if title %}
 <div class="page-header">
     <h3>{{ title }}{% if small_title %}{{ small_title }}{% endif %}</h3>
 </div>
-{% endif %}
+
+<ol class="breadcrumb">
+    <li><a href="/state/">States</a></li>
+    <li class="active">{{ title }}</li>
+</ol>
 
 <div class="row" style="margin-bottom: 10px;">
     <div class="col-md-12">
