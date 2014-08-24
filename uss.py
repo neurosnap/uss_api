@@ -70,7 +70,7 @@ def create_app():
     @flask_api("State Information")
     def state(state):
         state_info = us.states.lookup(state)
-        if state_infp:
+        if state_info:
             return state_info.__dict__
         else:
             return { "name": "Not found", "error": "No state information found" }
