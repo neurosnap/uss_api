@@ -1,6 +1,7 @@
 from __future__ import division, print_function
 
 import json
+from functools import wraps
 
 from flask import Flask, render_template, request, \
                     flash, redirect, url_for, jsonify
@@ -22,6 +23,24 @@ def create_app():
     except:
         pass
 
+    def flask_api(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            format_as = request.args.get("format")
+
+            func_val = func(*args, **kwargs)
+            data = json.dumps(func_val, sort_keys=True, indent=2, separators=(',', ': '))
+            response = "%s %s" % (request.method, request.path.replace(" ", "%20"))
+
+            ua = user_agent_parser.Parse(request.headers.get("User-Agent"))
+            if (format_as == "json"
+                or ua['os']['family'] == "Other"
+                or ua['user_agent']['family'] == "Other"):
+                    return jsonify(**func_val)
+            else:
+                return render_template("api.html", response=response, request=data, title="States List")
+        return wrapper
+
     @app.route("/")
     def index():
         return render_template("index.html")
@@ -31,36 +50,14 @@ def create_app():
         return render_template("about.html")
 
     @app.route("/states/")
+    @flask_api
     def states():
-        format_as = request.args.get("format")
-
-        states = { "states": [str(state) for state in us.states.STATES] }
-        data = json.dumps(states, sort_keys=True, indent=2, separators=(',', ': '))
-        response = "GET /states/"
-
-        ua = user_agent_parser.Parse(request.headers.get("User-Agent"))
-        if (format_as == "json"
-            or ua['os']['family'] == "Other"
-            or ua['user_agent']['family'] == "Other"):
-                return jsonify(**states)
-        else:
-            return render_template("api.html", response=response, request=data, title="States List")
+        return { "states": [str(state) for state in us.states.STATES] }
 
     @app.route("/states/abbr/")
+    @flask_api
     def states_abbreviation():
-        format_as = request.args.get("format")
-
-        states = { "states": [str(state.abbr) for state in us.states.STATES] }
-        data = json.dumps(states, sort_keys=True, indent=2, separators=(',', ': '))
-        response = "GET /states/abbr/"
-
-        ua = user_agent_parser.Parse(request.headers.get("User-Agent"))
-        if (format_as == "json"
-            or ua['os']['family'] == "Other"
-            or ua['user_agent']['family'] == "Other"):
-                return jsonify(**states)
-        else:
-            return render_template("api.html", response=response, request=data, title="States Abbreviations List")
+        return { "states": [str(state.abbr) for state in us.states.STATES] }
 
     @app.route("/state/")
     def state_list():
@@ -68,6 +65,7 @@ def create_app():
         return render_template("state_list.html", state_list=state_list)
 
     @app.route("/state/<path:state>/")
+    @flask_api
     def state(state):
         format_as = request.args.get("format")
 
@@ -76,21 +74,11 @@ def create_app():
             st = st.__dict__
         else:
             st = { "name": "Not found", "error": "No state information found" }
-        data = json.dumps(st, sort_keys=True, indent=2, separators=(',', ': '))
-        response = "GET /state/%s/" % state.replace(" ", "%20")
-
-        ua = user_agent_parser.Parse(request.headers.get("User-Agent"))
-        if (format_as == "json"
-            or ua['os']['family'] == "Other"
-            or ua['user_agent']['family'] == "Other"):
-                return jsonify(**st)
-        else:
-            return render_template("api.html", response=response, request=data, title=st['name'])
+        return st
 
     return app
 
 app = create_app()
 
 if __name__ == '__main__':
-    #app = create_app()
     app.run()

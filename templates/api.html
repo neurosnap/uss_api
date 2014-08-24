@@ -1,24 +1,41 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 {% if title %}
 <div class="page-header">
-    <h3>{{ title }} {% if small_title %}{{ small_title }}{% endif %}</h3>
+    <h3>{{ title }}{% if small_title %}{{ small_title }}{% endif %}</h3>
 </div>
 {% endif %}
+
 <div class="row" style="margin-bottom: 10px;">
     <div class="col-md-12">
         <button type="submit" class="btn btn-primary json_format">JSON</button>
     </div>
 </div>
+
+{% if response %}
 <div class="row">
     <div class="col-md-12">
-        <pre>{% if response %}{{ response }}{% endif %}</pre>
+        <pre>{{ response }}</pre>
     </div>
 </div>
+{% endif %}
+
+{% if headers %}
 <div class="row">
     <div class="col-md-12">
-        <pre>{% if request %}{{ request|safe }}{% endif %}</pre>
+        <pre>{{ headers }}</pre>
     </div>
 </div>
+{% endif %}
+
+{% if request %}
+<div class="row">
+    <div class="col-md-12">
+        <pre>{{ request|safe }}</pre>
+    </div>
+</div>
+{% endif %}
+
 {% endblock %}
