@@ -41,25 +41,14 @@
                 </div>
             </div>
         </nav>
+        {% block jumbo_content %}
         <div id="content" class="container">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                    <div class="alert alert-{{category}} alert-dismissable" style="margin: 8px 0px;">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
-                           &times;
-                        </button>
-                        {{ message }}
-                    </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-
             {% block content %}{% endblock %}
             <hr />
             &#169; Copyright 2014 by <a href="http://neurosnap.net">Eric Bower</a>
             <br /><br />
         </div>
+        {% endblock %}
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
         <script src="{{ url_for('static', filename='core.js')  }}"></script>

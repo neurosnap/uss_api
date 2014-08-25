@@ -1,21 +1,34 @@
 {% extends "base.html" %}
 
-{% block content %}
-<div class="row">
-    <div class="col-md-12">
+{% block css %}
+<style>
+    .jumbotron {
+        background-image: url({{ url_for('static', filename='america_map.jpg') }});
+        background-size: 100%;
+        color: #fff !important;
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black !important;
+    }
+</style>
+{% endblock %}
+
+{% block jumbo_content %}
+<!-- <div class="row">
+    <div class="col-md-12"> -->
         <div class="jumbotron">
-            <h1>US State API</h1>
-            <p>
-                This service is a simple programming interface for developers 
-                that allows quick access to basic US State information.
-            </p>
-            <p>
-                <a class="btn btn-primary btn-lg" role="button" href="/state/">
-                    <span class="glyphicon glyphicon-list"></span>
-                     State Information List
-                </a>
-            </p>
+            <div class="container">
+                <h1>US State API</h1>
+                <p>
+                    This service is a simple programming interface for developers 
+                    that allows quick access to basic US State information.
+                </p>
+                <p>
+                    <a class="btn btn-primary btn-lg" role="button" href="/state/">
+                        <span class="glyphicon glyphicon-list"></span>
+                         State Information List
+                    </a>
+                </p>
+            </div>
         </div>
-    </div>
-</div>
+    <!-- </div>
+</div> -->
 {% endblock %}
