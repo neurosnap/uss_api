@@ -1,11 +1,13 @@
-USA State API
+US State API
 =============
 
-RESTful API to get United States State meta information.
+http://uss.neurosnap.net/
+
+RESTful API to get US State meta information.
 
 Need all the states in an array?
 As abbreviations?
-Need to lookup one single state information?
+Need to lookup single state information?
 Need to convert a state name into an abbreviation?
 Vice versa?
 
