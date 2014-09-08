@@ -3,7 +3,7 @@ from __future__ import division, print_function
 from flask import Flask, render_template
 import us
 
-from decorators import render_api, api, FlaskAPI
+from decorators import render_api
 
 class Config(object):
     CSRF_ENABLED = False
@@ -27,20 +27,14 @@ def create_app():
     def about():
         return render_template("about.html")
 
-    @app.route("/states/<int:id>/", methods=["GET", "POST"])
     @app.route("/states/")
-    @api
-    class States(FlaskAPI):
-
-        def get(self, id=None):
-            states = [str(state) for state in us.states.STATES]
-            return render_api({ "states": states },
-                                title="State List")
-        def post(self, id):
-            return render_api({ "post": "I did a post bitch", "id": id }, title="States List")
+    def list():
+        states = [str(state) for state in us.states.STATES]
+        return render_api({ "states": states },
+                            title="State List")
 
     @app.route("/states/abbr/")
-    def states_abbreviation():
+    def abbr():
         states = [str(state.abbr) for state in us.states.STATES]
         return render_api({ "states": states },
                             title="State Abbreviations List")

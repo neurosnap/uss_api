@@ -19,21 +19,28 @@ class FlaskAPI(object):
     def __init__(self, *args, **kwargs):
         pass #super(FlaskAPI, self).__init__(*args, **kwargs)
 
-def api(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
+def api(app, rule, *args, **kwargs):
+    def decorator(func):
         func_val = func(*args, **kwargs)
-        if request.method == "GET":
-            return func_val.get(*args, **kwargs)
-        if request.method == "POST":
-            return func_val.post(*args, **kwargs)
-        if request.method == "PUT":
-            return func_val.put(*args, **kwargs)
-        if request.method == "UPDATE":
-            return func_val.update(*args, **kwargs)
-        if request.method == "DELETE":
-            return func_val.delete(*args, **kwargs)
-    return wrapper
+        try:
+            app.add_url_rule(rule, view_func=func().list)
+        except AssertionError:
+            pass
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if request.method == "GET":
+                if not args and kwargs == {}:
+                    return func_val.list()
+                return func_val.get(*args, **kwargs)
+            if request.method == "POST":
+                return func_val.post(*args, **kwargs)
+            if request.method == "PUT":
+                return func_val.put(*args, **kwargs)
+            if request.method == "DELETE":
+                return func_val.delete(*args, **kwargs)
+        return wrapper
+    return decorator
+
 
 def render_api(res_object, template="api.html", **kwargs):
     """ Primary abstraction to simplify the web browsable API
