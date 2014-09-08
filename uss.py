@@ -3,7 +3,7 @@ from __future__ import division, print_function
 from flask import Flask, render_template
 import us
 
-from decorators import flask_api
+from decorators import render_api, api, FlaskAPI
 
 class Config(object):
     CSRF_ENABLED = False
@@ -27,15 +27,23 @@ def create_app():
     def about():
         return render_template("about.html")
 
+    @app.route("/states/<int:id>/", methods=["GET", "POST"])
     @app.route("/states/")
-    @flask_api(title="State List")
-    def states():
-        return { "states": [str(state) for state in us.states.STATES] }
+    @api
+    class States(FlaskAPI):
+
+        def get(self, id=None):
+            states = [str(state) for state in us.states.STATES]
+            return render_api({ "states": states },
+                                title="State List")
+        def post(self, id):
+            return render_api({ "post": "I did a post bitch", "id": id }, title="States List")
 
     @app.route("/states/abbr/")
-    @flask_api(title="State Abbreviations List")
     def states_abbreviation():
-        return { "states": [str(state.abbr) for state in us.states.STATES] }
+        states = [str(state.abbr) for state in us.states.STATES]
+        return render_api({ "states": states },
+                            title="State Abbreviations List")
 
     @app.route("/state/")
     def state_list():
@@ -45,16 +53,16 @@ def create_app():
                                 abbr_list=abbr_list)
 
     @app.route("/state/<path:state>/")
-    @flask_api("state.html", title="State Information")
     def state(state):
         state_info = us.states.lookup(state)
         if state_info:
-            return state_info.__dict__
+            res = state_info.__dict__
         else:
-            return {
+            res = {
                 "name": "Not found",
                 "error": "No state information found"
             }
+        return render_api(res, title="State Information")
 
     return app
 
